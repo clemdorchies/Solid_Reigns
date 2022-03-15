@@ -5,6 +5,11 @@
  */
 package com.fges.tp_solid.reigns;
 
+import static com.fges.tp_solid.reigns.Genre.REINE;
+import static com.fges.tp_solid.reigns.Genre.ROI;
+
+import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  *
@@ -14,70 +19,30 @@ public class Personnage {
     
     protected String nom;
     protected Genre genre;
+    protected static ArrayList<Jauge> jauges;
     
-    protected Jauge jaugeClerge;
-    protected Jauge jaugePeuple;
-    protected Jauge jaugeArmee;
-    protected Jauge jaugeFinance;
-    
-    public Personnage(String nom, Genre genre){
+    public Personnage(String nom, Genre genre, ArrayList<Jauge> jauges){
         this.nom = nom;
         this.genre = genre;
-        
-        // initialisation des jauges entre 15 et 35 points
-        jaugeClerge = new Jauge("Clergé",(int) (15 + Math.random() * ( 35 - 15 )));
-        jaugePeuple = new Jauge("Peuple",(int) (15 + Math.random() * ( 35 - 15 )));
-        jaugeArmee = new Jauge("Armée",(int) (15 + Math.random() * ( 35 - 15 )));
-        jaugeFinance = new Jauge("Finance",(int) (15 + Math.random() * ( 35 - 15 )));
+        Personnage.jauges = jauges;
     }
     
-    /**
-     * Affiche les jauges dans la console
-     */
-    public void AfficheJauges(){
-        afficheJauge(jaugeClerge);
-        afficheJauge(jaugePeuple);
-        afficheJauge(jaugeArmee);
-        afficheJauge(jaugeFinance);
+    public static Personnage initPersonnage(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Entrez le nom du personnage: ");
         System.out.flush();
-    }
-    
-    /**
-     * Le jeu s'arrête si une des jauges atteint 0 ou 50
-     * @return 
-     */
-    public boolean finDuJeu(){
-        if(jaugeClerge.getValeur()<=0
-        || jaugeClerge.getValeur()>=50
-        || jaugePeuple.getValeur()<=0
-        || jaugePeuple.getValeur()>=50
-        || jaugeArmee.getValeur()<=0
-        || jaugeArmee.getValeur()>=50
-        || jaugeFinance.getValeur()<=0
-        || jaugeFinance.getValeur()>=50){
-            return true;
+        String nom = scanner.nextLine();
+        System.out.println(
+            "Faut-il vous appeler Roi ou Reine ? (1 pour Roi, 2 pour Reine)");
+        int genre = scanner.nextInt();
+        Genre roiReine; 
+        if(genre==1){
+            roiReine = ROI;
         }else{
-            return false;
+            roiReine = REINE;
         }
-    }
-    
-    /**
-     * Affiche une jauge dans la console (
-     */
-    private void afficheJauge(Jauge jauge){
-        String resultat = "[";
-        // valeur : ####
-        for(int i=0;i<jauge.getValeur();i++){
-            resultat += "#";
-        }
-        // on complète avec ____
-        for(int i=0;i<50-(jauge.getValeur()>0?jauge.getValeur():0);i++){
-            resultat += "_";
-        }
-        resultat += "] ";
-        // affichage du nom
-        resultat += jauge.getNom();
-        System.out.println(resultat);
+        jauges = Jauge.initJauge();
+        return new Personnage(nom, roiReine, jauges);
     }
 
     public String getNom() {
@@ -95,37 +60,4 @@ public class Personnage {
     public void setGenre(Genre genre) {
         this.genre = genre;
     }
-
-    public Jauge getJaugeClerge() {
-        return jaugeClerge;
-    }
-
-    public void setJaugeClerge(Jauge jaugeClerge) {
-        this.jaugeClerge = jaugeClerge;
-    }
-
-    public Jauge getJaugePeuple() {
-        return jaugePeuple;
-    }
-
-    public void setJaugePeuple(Jauge jaugePeuple) {
-        this.jaugePeuple = jaugePeuple;
-    }
-
-    public Jauge getJaugeArmee() {
-        return jaugeArmee;
-    }
-
-    public void setJaugeArmee(Jauge jaugeArmee) {
-        this.jaugeArmee = jaugeArmee;
-    }
-
-    public Jauge getJaugeFinance() {
-        return jaugeFinance;
-    }
-
-    public void setJaugeFinance(Jauge jaugeFinance) {
-        this.jaugeFinance = jaugeFinance;
-    }
-    
 }
