@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.fges.tp_solid.reigns;
 
 import java.util.ArrayList;
@@ -10,46 +5,41 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-/**
- *
- * @author julie.jacques
- */
 public class Question {
     // nom du perso qui pose la question
     protected String nomPersonnage;
     protected String question;
     protected String effetGauche;
     protected String effetDroite;
-    protected static Map<TypeJauge,Integer> effetJaugeGauche;
-    protected static Map<TypeJauge,Integer> effetJaugeDroite;
+    protected Effet effet;
+    protected Map<TypeJauge,Integer> effetJaugeGauche;
+    protected Map<TypeJauge,Integer> effetJaugeDroite;
     
-    public Question(String nomPersonnage, 
-                    String question,
-                    String effetGauche,
-                    String effetDroite){
+    public Question(String nomPersonnage, String question, String effetGauche, String effetDroite) {
         this.nomPersonnage = nomPersonnage;
         this.question = question;
         this.effetGauche = effetGauche;
         this.effetDroite = effetDroite;
-        Question.effetJaugeGauche = new TreeMap<>();
-        Question.effetJaugeDroite = new TreeMap<>();
+        this.effetJaugeGauche = new TreeMap<>();
+        this.effetJaugeDroite = new TreeMap<>();
+        this.effet = new Effet();
     }
     
     public void afficheQuestion(){
-        String result = "["+nomPersonnage+"] "
-                + question
-                + "[G: "+effetGauche
-                + ",D: "+effetDroite
+        String result = "[" + nomPersonnage + "] "
+                + question + " " 
+                + "[G: " + effetGauche
+                + ",D: " + effetDroite
                 + "]";
         System.out.println(result);
-        System.out.println("Effet G:" + Effet.afficheEffets(effetJaugeGauche));
-        System.out.println("Effet D:" + Effet.afficheEffets(effetJaugeDroite));
+        System.out.println("Effet G:" + effet.afficheEffets(effetJaugeGauche));
+        System.out.println("Effet D:" + effet.afficheEffets(effetJaugeDroite));
         System.out.flush();
         
     }
     
-    public static void reponseQuestion(Question question, Personnage perso){
-        question.afficheQuestion();
+    public void reponseQuestion(Personnage perso){
+        afficheQuestion();
         // récupère la réponse
         Scanner scanner = new Scanner(System.in);
         String reponse = "";
@@ -60,9 +50,9 @@ public class Question {
         }
         // applique les malus
         if(reponse.equals("G")){
-            Effet.appliqueEffetsGauche(perso, effetJaugeGauche);
+            effet.appliqueEffetsGauche(perso, effetJaugeGauche);
         }else{
-            Effet.appliqueEffetsDroite(perso, effetJaugeDroite);
+            effet.appliqueEffetsDroite(perso, effetJaugeDroite);
         }
     } 
     
@@ -71,8 +61,7 @@ public class Question {
         return questions.get(numQuestion);
     }
 
-    public static ArrayList<Question> initBanqueQuestions(){
-        ArrayList<Question> questions = new ArrayList<Question>();
+    public static void initBanqueQuestions(ArrayList<Question> questions){
         Question question1 = new Question(
                 "Main du roi",
                 "Le peuple souhaite libérer les prisonniers",
@@ -120,8 +109,6 @@ public class Question {
         question5.ajouteEffetDroite(TypeJauge.FINANCE, +1);
         question5.ajouteEffetDroite(TypeJauge.PEUPLE, -3);
         questions.add(question5);
-
-        return questions;
     }
     
     public void ajouteEffetGauche(TypeJauge jauge,

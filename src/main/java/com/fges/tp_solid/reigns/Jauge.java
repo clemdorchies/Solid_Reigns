@@ -1,16 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.fges.tp_solid.reigns;
 
 import java.util.ArrayList;
 
-/**
- *
- * @author julie.jacques
- */
 public class Jauge {
     
     protected TypeJauge type;
@@ -43,10 +34,8 @@ public class Jauge {
         return jauges;
     }
 
-    /**
-     * Affiche les jauges dans la console
-     */
-    public static void AfficheJauges(Personnage perso){
+    // Affiche les jauges dans la console
+    public static void AfficheJauges(){
         afficheJauge(jaugeClerge);
         afficheJauge(jaugePeuple);
         afficheJauge(jaugeArmee);
@@ -54,9 +43,7 @@ public class Jauge {
         System.out.flush();
     }
 
-    /**
-     * Affiche une jauge dans la console (
-     */
+    // Affiche une jauge dans la console
     private static void afficheJauge(Jauge jauge){
         String resultat = "[";
         // valeur : ####
@@ -98,7 +85,7 @@ public class Jauge {
     }
 
     public static Jauge getJaugeClerge(Personnage perso) {
-        return Personnage.jauges.get(0);
+        return perso.jauges.get(0);
     }
 
     public void setJaugeClerge(Jauge jaugeClerge) {
@@ -106,7 +93,7 @@ public class Jauge {
     }
 
     public static Jauge getJaugePeuple(Personnage perso) {
-        return Personnage.jauges.get(1);
+        return perso.jauges.get(1);
     }
 
     public void setJaugePeuple(Jauge jaugePeuple) {
@@ -114,7 +101,7 @@ public class Jauge {
     }
 
     public static Jauge getJaugeArmee(Personnage perso) {
-        return Personnage.jauges.get(2);
+        return perso.jauges.get(2);
     }
 
     public void setJaugeArmee(Jauge jaugeArmee) {
@@ -122,7 +109,7 @@ public class Jauge {
     }
 
     public static Jauge getJaugeFinance(Personnage perso) {
-        return Personnage.jauges.get(3);
+        return perso.jauges.get(3);
     }
 
     public void setJaugeFinance(Jauge jaugeFinance) {
