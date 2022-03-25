@@ -27,21 +27,21 @@ public class Question {
         this.conditions = new ArrayList<Condition>();
     }
     
-    public void afficheQuestion(){
+    public void afficheQuestion(int nbTours, Boolean activated){
         String result = "[" + nomPersonnage + "] "
                 + question + " " 
                 + "[G: " + effetGauche
                 + ",D: " + effetDroite
                 + "]";
         System.out.println(result);
-        System.out.println("Effet G:" + effet.afficheEffets(effetJaugeGauche));
-        System.out.println("Effet D:" + effet.afficheEffets(effetJaugeDroite));
+        System.out.println("Effet G:" + effet.afficheEffets(effetJaugeGauche, nbTours, activated));
+        System.out.println("Effet D:" + effet.afficheEffets(effetJaugeDroite, nbTours, activated));
         System.out.flush();
         
     }
     
-    public void reponseQuestion(Personnage perso){
-        afficheQuestion();
+    public void reponseQuestion(Personnage perso, int nbTours, Boolean activated){
+        afficheQuestion(nbTours, activated);
         // récupère la réponse
         Scanner scanner = new Scanner(System.in);
         String reponse = "";
@@ -52,9 +52,9 @@ public class Question {
         }
         // applique les malus
         if(reponse.equals("G")){
-            effet.appliqueEffetsGauche(perso, effetJaugeGauche);
+            effet.appliqueEffetsGauche(perso, effetJaugeGauche, nbTours, activated);
         }else{
-            effet.appliqueEffetsDroite(perso, effetJaugeDroite);
+            effet.appliqueEffetsDroite(perso, effetJaugeDroite, nbTours, activated);
         }
     } 
     
@@ -80,7 +80,6 @@ public class Question {
         if (bonneCondition == true) {
             return questions.get(numQuestion);
         }
-        System.out.println("Relance");
         return getQuestionAleatoire(questions, perso);
     }
 
@@ -132,7 +131,6 @@ public class Question {
         question5.ajouteEffetDroite(TypeJauge.FINANCE, +1);
         question5.ajouteEffetDroite(TypeJauge.PEUPLE, -3);
         questions.add(question5);
-        //TODO : version 1.2
         Question question6 = new Question(
                     "Main du Roi",
                     "Les caisses sont vides...",
