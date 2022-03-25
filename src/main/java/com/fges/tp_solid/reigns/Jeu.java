@@ -7,17 +7,16 @@ public class Jeu {
         
         // début du jeu 
         System.out.println("Bienvenue sur Reigns");
-
-        ArrayList<Question> questions = new ArrayList<Question>();
-        Question.initBanqueQuestions(questions);
         
         System.out.println("Création du personnage...");
         
         Personnage personnage = new Personnage();
+
+        ArrayList<Question> questions = new ArrayList<Question>();
+        Question.initBanqueQuestions(questions, personnage);
         
         System.out.println(personnage.getGenre().longRegne() + " " + personnage.getNom());
 
-        ArrayList<Jauge> jauges = new ArrayList<Jauge>();
         Jauge.AfficheJauges();
         
         // tirage des questions
@@ -26,7 +25,7 @@ public class Jeu {
         Question question;
         while(!finDuJeu(personnage)) {
             nbTours++;
-            question = Question.getQuestionAleatoire(questions);
+            question = Question.getQuestionAleatoire(questions, personnage);
             question.reponseQuestion(personnage);
             Jauge.AfficheJauges();
         }

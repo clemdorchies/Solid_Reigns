@@ -14,15 +14,17 @@ public class Question {
     protected Effet effet;
     protected Map<TypeJauge,Integer> effetJaugeGauche;
     protected Map<TypeJauge,Integer> effetJaugeDroite;
+    protected ArrayList<Condition> conditions;
     
     public Question(String nomPersonnage, String question, String effetGauche, String effetDroite) {
         this.nomPersonnage = nomPersonnage;
         this.question = question;
         this.effetGauche = effetGauche;
         this.effetDroite = effetDroite;
+        this.effet = new Effet();
         this.effetJaugeGauche = new TreeMap<>();
         this.effetJaugeDroite = new TreeMap<>();
-        this.effet = new Effet();
+        this.conditions = new ArrayList<Condition>();
     }
     
     public void afficheQuestion(){
@@ -56,12 +58,33 @@ public class Question {
         }
     } 
     
-    public static Question getQuestionAleatoire(ArrayList<Question> questions){
+    public static Question getQuestionAleatoire(ArrayList<Question> questions, Personnage perso){
         int numQuestion = (int) (Math.random()*questions.size());
-        return questions.get(numQuestion);
+        Boolean bonneCondition = true;
+        int i = 0;
+        if (numQuestion == 5 || numQuestion == 6) {
+        while (i < questions.get(numQuestion).conditions.size() && bonneCondition == true) {
+            if (questions.get(numQuestion).conditions.get(i).operateur == ">" &&
+            perso.jauges.get(questions.get(numQuestion).conditions.get(i).type.getValue()).getValeur() > questions.get(numQuestion).conditions.get(i).nombre) {
+                bonneCondition = true;
+            }
+            else if (questions.get(numQuestion).conditions.get(i).operateur == "<" &&
+            perso.jauges.get(questions.get(numQuestion).conditions.get(i).type.getValue()).getValeur() < questions.get(numQuestion).conditions.get(i).nombre) {
+                bonneCondition = true;
+            }
+            else {
+                bonneCondition = false;
+            }
+            i++;
+        }}
+        if (bonneCondition == true) {
+            return questions.get(numQuestion);
+        }
+        System.out.println("Relance");
+        return getQuestionAleatoire(questions, perso);
     }
 
-    public static void initBanqueQuestions(ArrayList<Question> questions){
+    public static void initBanqueQuestions(ArrayList<Question> questions, Personnage perso){
         Question question1 = new Question(
                 "Main du roi",
                 "Le peuple souhaite libérer les prisonniers",
@@ -109,15 +132,37 @@ public class Question {
         question5.ajouteEffetDroite(TypeJauge.FINANCE, +1);
         question5.ajouteEffetDroite(TypeJauge.PEUPLE, -3);
         questions.add(question5);
+        //TODO : version 1.2
+        Question question6 = new Question(
+                    "Main du Roi",
+                    "Les caisses sont vides...",
+                    "Augmenter les taxes",
+                    "Emprunter");
+        question6.ajouteEffetGauche(TypeJauge.FINANCE, +10);
+        question6.ajouteEffetGauche(TypeJauge.PEUPLE, -5);
+        question6.ajouteEffetDroite(TypeJauge.FINANCE, +1);
+        question6.ajouteEffetDroite(TypeJauge.PEUPLE, -3);
+        question6.conditions.add(new Condition(TypeJauge.FINANCE, "<", 10));
+        questions.add(question6);
+        Question question7 = new Question(
+                    "Prêtre",
+                    "J'aimerai qu'on nous considère en tant que tel",
+                    "Construire un monastère",
+                    "Ecouter sans rien faire");
+        question7.ajouteEffetGauche(TypeJauge.FINANCE, +10);
+        question7.ajouteEffetGauche(TypeJauge.PEUPLE, -5);
+        question7.ajouteEffetDroite(TypeJauge.FINANCE, +1);
+        question7.ajouteEffetDroite(TypeJauge.PEUPLE, -3);
+        question7.conditions.add(new Condition(TypeJauge.CLERGE, "<", 10));
+        question7.conditions.add(new Condition(TypeJauge.FINANCE, ">", 30));
+        questions.add(question7);
     }
     
-    public void ajouteEffetGauche(TypeJauge jauge,
-                                   int valeur){
+    public void ajouteEffetGauche(TypeJauge jauge, int valeur){
         effetJaugeGauche.put(jauge,valeur);
     }
     
-    public void ajouteEffetDroite(TypeJauge jauge,
-                                   int valeur){
+    public void ajouteEffetDroite(TypeJauge jauge, int valeur){
         effetJaugeDroite.put(jauge,valeur);
     }
 
